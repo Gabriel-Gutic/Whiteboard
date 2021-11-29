@@ -5,10 +5,6 @@ class Point:
         self.x = x
         self.y = y
     
-    def __init__(self, pos : tuple):
-        self.x = pos[0]
-        self.y = pos[1]
-
     def set_x(self, x):
         self.x = x
 

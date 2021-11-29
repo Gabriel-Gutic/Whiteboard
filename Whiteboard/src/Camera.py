@@ -6,7 +6,7 @@ from Point import Point
 
 class Camera:
     def __init__(self, window, pos, fov, speed=10):
-        self.position = Point(pos)
+        self.position = pos
         self.fov = fov
 
         self.near = 1
