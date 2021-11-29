@@ -3,8 +3,12 @@ import pyglet
 from Drawer import Drawer
 from Page import PageStack
 from Timer import Timer
+from Camera import Camera
 
-window = pyglet.window.Window(800, 600, "Whiteboard", resizable=True)
+
+window = pyglet.window.Window(1280, 720, "Whiteboard", resizable=True)
+camera = Camera(window=window, pos=(0, 0), fov=1000)
+
 
 pages = PageStack()
 @window.event
@@ -14,10 +18,14 @@ def on_key_press(symbol, modifiers):
         if pages.current_index >= pages.get_size():
             pages.Push()
     elif symbol == pyglet.window.key.UP:
+        if pages.current_index <= 0:
+            return
         if pages.get_current_page().is_empty() and pages.current_index == pages.get_size() - 1:
             pages.Pop()
         pages.current_index -= 1
     
+    #camera.on_key_press(symbol, modifiers)
+
     print("We have {0} pages".format(pages.get_size()))
 
 is_drawing = False
@@ -35,7 +43,7 @@ if len(tablets) > 0:
 
         if pressure > 0:
             is_pen_drawing = True
-            point = (x, y)
+            point = camera.translate(x, y)
 
             pages.get_current_page().get_drawer().add_point(point)
         else:
@@ -61,8 +69,12 @@ def on_mouse_release(x, y, button, modifiers):
 @window.event
 def on_mouse_drag(x, y, dx, dy, buttons, modifiers):
     if is_drawing and not is_pen_drawing:
-        point = (x, y)
+        point = camera.translate(x, y)
         pages.get_current_page().get_drawer().add_point(point)
+
+@window.event
+def on_mouse_scroll(x, y, scroll_x, scroll_y):
+    pass
 
 pyglet.gl.glEnable(pyglet.gl.GL_BLEND)
 pyglet.gl.glBlendFunc(pyglet.gl.GL_SRC_ALPHA, pyglet.gl.GL_ONE_MINUS_SRC_ALPHA)
@@ -70,15 +82,23 @@ pyglet.gl.glBlendFunc(pyglet.gl.GL_SRC_ALPHA, pyglet.gl.GL_ONE_MINUS_SRC_ALPHA)
 draw_benchmarking = open("Files/draw_benchmarking.txt", "w")
 
 pyglet.gl.glLineWidth(3.0)
+
+
 @window.event
 def on_draw():
     t = Timer()
+    camera.begin()
+
     window.clear()
 
     pages.get_current_page().get_drawer().draw()
 
+    camera.end()
     draw_benchmarking.write(str(t.get_microseconds()) + '\n')
-    print(t.str_microseconds())
 
+def update(delta):
+    pass
+
+pyglet.clock.schedule_interval(update, 1/120.0)
 pyglet.app.run()
 draw_benchmarking.close()
