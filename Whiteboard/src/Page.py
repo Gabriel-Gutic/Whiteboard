@@ -7,7 +7,7 @@ from Point import Point
 class Page:
     def __init__(self, window):
         self._drawer = Drawer()
-        self._camera = Camera(window=window, pos=Point(0, 0), fov=1000)
+        self._camera = Camera(window=window, pos=Point(0, 0), fov=1)
 
     def update(self, dt):
         from App import Input

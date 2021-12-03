@@ -3,8 +3,9 @@ import pyglet
 from Window import Window
 from Camera import Camera
 from Page import PageStack
-from Point import Point
 from Printer import print_error
+import Color
+from GUI.Button import Button
 
 
 class App:
@@ -23,7 +24,14 @@ class App:
         from EventsSetup.Events import setup_events
         setup_events(self)
 
+        self.button = Button(text="First Button")
+
+    def draw(self):
+        self.button.draw()
+
     def update(self, dt):
+        self.pages.current_page().drawer.current_color = Color.BLACK
+
         self.pages.current_page().update(dt)
 
     def run(self):
@@ -32,6 +40,7 @@ class App:
         pyglet.gl.glLineWidth(3.0)
 
         pyglet.clock.schedule_interval(self.update, 1/120.0)
+
         pyglet.app.run()
 
     @property

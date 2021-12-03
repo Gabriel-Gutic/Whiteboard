@@ -22,7 +22,7 @@ class Drawer:
         if self.last_point is not None and coords is not None:
             self.data = self.batch.add(2, pyglet.gl.GL_LINES, None,
                 ('v2f', (self.last_point[0], self.last_point[1], coords[0], coords[1])),
-                ('c4B',self.current_color.get_rgba() * 2), 
+                ('c4B', self.current_color.get_rgba() * 2), 
             )
         self.last_point = coords
     

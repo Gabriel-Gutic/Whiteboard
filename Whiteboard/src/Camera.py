@@ -5,7 +5,7 @@ from Point import Point
 
 
 class Camera:
-    def __init__(self, window, pos, fov, speed=10):
+    def __init__(self, window, pos, fov, speed=200):
         self.position = pos
         self.fov = fov
 
